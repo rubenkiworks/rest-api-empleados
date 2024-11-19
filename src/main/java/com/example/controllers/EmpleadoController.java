@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -42,7 +44,10 @@ public class EmpleadoController {
     @RequestParam(name="size", required=false) Integer size){
 
         List<Empleado> empleados;
-        Sort sort = Sort.by("nombre");
+        //Ordenacion por nombre (la del ejercicio anterior)
+        //Sort sort = Sort.by("nombre");
+        //Ordenacion nueva que me ha pedido Victor
+        Sort sort = Sort.by(Direction.ASC, "fechaAlta");
         
         if (page != null && size != null) {
             Pageable pageable = PageRequest.of(page, size, sort);
