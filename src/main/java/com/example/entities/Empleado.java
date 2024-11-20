@@ -18,7 +18,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,11 +39,24 @@ public class Empleado implements Serializable{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+
+    @NotNull(message="El nombre del empleado no puede ser nulo")
+    @NotEmpty(message="El nombre del empleado no puede estar vacio")
+    @Size(min=4, max=25, message="El nombre del empleado tiene que estar entre 4 y 25 caracteres")
     private String nombre;
+
+    @NotNull(message="El apellido del empleado no puede ser nulo")
+    @NotEmpty(message="El apellido del empleado no puede estar vacio")
+    @Size(min=4, max=25, message="El apellido del empleado tiene que estar entre 4 y 25 caracteres")
     private String primerAp;
     private String segundoAp;
+
+    //@Pattern(regexp="\\d{4}-\\d{2}-\\d{2}", message="La fecha requiere un formato YYYY-MM-DD")
     private LocalDate fechaAlta;
+    
+    @Min(value=0, message="El salario no puede ser negativo")
     private double salario;
+    
     
     @Enumerated(EnumType.STRING)
     private Genero genero;
