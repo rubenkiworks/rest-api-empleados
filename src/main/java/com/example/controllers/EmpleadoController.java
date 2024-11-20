@@ -97,8 +97,8 @@ public class EmpleadoController {
             // caracteres alfanumerico (letras y numeros) generados aleatoriamente
             String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file);
 
-            // Asociar el nombre del archivo recibido con la propiedad imagenProducto de la entidad 
-            // Producto
+            // Asociar el nombre del archivo recibido con la propiedad imagenEmpleado de la entidad 
+            // Empledo
             empleado.setImagenEmpleado(fileCode + "-" + file.getOriginalFilename());
 
             // Hay que proporcionar informacion respecto a la imagen guardada
@@ -106,13 +106,13 @@ public class EmpleadoController {
             // FileUploadResponse
             // FileUploadResponse fileUploadResponse = new FileUploadResponse(
             //     fileCode + "-" + file.getOriginalFilename(), 
-            //     "/productos/fileDownload/" + fileCode ,
+            //     "/empleados/fileDownload/" + fileCode ,
             //     file.getSize());
 
             // Con lombok creamos el objeto FileUploadResponse
             FileUploadResponse fileUploadResponse = FileUploadResponse.builder()
                 .fileName(fileCode + "-" + file.getOriginalFilename())
-                .downloadURI("/productos/fileDownload/" + fileCode)
+                .downloadURI("/empleados/fileDownload/" + fileCode)
                 .fileSize(file.getSize())
                 .build();
 
@@ -144,7 +144,7 @@ public class EmpleadoController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Map<String, Object>> updateProduct(@Valid @RequestBody Empleado empleado, BindingResult results,
+    public ResponseEntity<Map<String, Object>> updateEmpleado(@Valid @RequestBody Empleado empleado, BindingResult results,
     @PathVariable Integer id){
 
         ResponseEntity<Map<String, Object>> responseEntity = null;

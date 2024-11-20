@@ -12,7 +12,7 @@ public interface EmpleadoService {
     public Page<Empleado> findAll(Pageable pageable);
     public List<Empleado> findAll(Sort sort);
     public Empleado findById(int id);
-    public Empleado save(Empleado producto);
-    public void delete(Empleado producto);
+    public Empleado save(Empleado empleado);
+    public void delete(Empleado empleado);
     public List<Empleado> findAll();
 }
