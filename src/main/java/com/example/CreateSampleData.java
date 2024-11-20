@@ -44,6 +44,7 @@ public class CreateSampleData {
             .genero(Genero.HOMBRE)
             .fechaAlta(LocalDate.of(2017, Month.APRIL, 2))
             .departamento(departamentoService.findById(1))
+            .imagenEmpleado("test.jpeg")
             .build());
 
             empleadoService.save(Empleado.builder()
@@ -55,6 +56,7 @@ public class CreateSampleData {
             .genero(Genero.HOMBRE)
             .fechaAlta(LocalDate.of(2019, Month.AUGUST, 2))
             .departamento(departamentoService.findById(2))
+            .imagenEmpleado("test.jpeg")
             .build());
 
             telefonoService.save(Telefono.builder()

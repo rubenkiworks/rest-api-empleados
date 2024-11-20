@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +24,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.entities.Empleado;
+import com.example.models.FileUploadResponse;
 import com.example.services.EmpleadoService;
+import com.example.utilities.FileUploadUtil;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -37,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmpleadoController {
     private final EmpleadoService empleadoService;
+    private final FileUploadUtil fileUploadUtil;
 
     @GetMapping
     public ResponseEntity<List<Empleado>> findAll(@RequestParam(name="page", required=false) Integer page,
@@ -59,9 +65,11 @@ public class EmpleadoController {
         return new ResponseEntity<>(empleados, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes="multipart/form-data")
     @Transactional
-    public ResponseEntity<Map<String, Object>> saveEmpleado(@Valid @RequestBody Empleado empleado, BindingResult results){
+    public ResponseEntity<Map<String, Object>> saveEmpleado(@Valid  @RequestPart(name="empleado") Empleado empleado, 
+     @RequestPart(name="file") MultipartFile file,
+    BindingResult results) throws IOException{
         
         ResponseEntity<Map<String, Object>> responseEntity = null;
         Map<String, Object> responseAsMap = new HashMap<>();
@@ -79,6 +87,37 @@ public class EmpleadoController {
             responseEntity = new ResponseEntity<>(responseAsMap, HttpStatus.BAD_REQUEST);
 
             return responseEntity;
+        }
+
+        if (!file.isEmpty()) {
+
+            // Para gestionar el archivo recibido, vamos a crear un componente en un paquete llamado 
+            // com.example.utilities, y en dicho componente crearemos un metodo que se encargara de 
+            // guardar el archivo en una carpeta especifica del servidor, y devolver un codigo de 8 
+            // caracteres alfanumerico (letras y numeros) generados aleatoriamente
+            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file);
+
+            // Asociar el nombre del archivo recibido con la propiedad imagenProducto de la entidad 
+            // Producto
+            empleado.setImagenEmpleado(fileCode + "-" + file.getOriginalFilename());
+
+            // Hay que proporcionar informacion respecto a la imagen guardada
+            // para lo cual, en un paquete model (com.example.model), crearemos un record
+            // FileUploadResponse
+            // FileUploadResponse fileUploadResponse = new FileUploadResponse(
+            //     fileCode + "-" + file.getOriginalFilename(), 
+            //     "/productos/fileDownload/" + fileCode ,
+            //     file.getSize());
+
+            // Con lombok creamos el objeto FileUploadResponse
+            FileUploadResponse fileUploadResponse = FileUploadResponse.builder()
+                .fileName(fileCode + "-" + file.getOriginalFilename())
+                .downloadURI("/productos/fileDownload/" + fileCode)
+                .fileSize(file.getSize())
+                .build();
+
+            responseAsMap.put("Info de la imagen", fileUploadResponse);
+
         }
         
         try {

@@ -60,6 +60,9 @@ public class Empleado implements Serializable{
     
     @Enumerated(EnumType.STRING)
     private Genero genero;
+
+    @NotNull(message="La imagen del producto es requerida")
+    private String imagenEmpleado;
     
     @NotNull(message="El departamento es requerido")
     @ManyToOne(fetch=FetchType.LAZY)
