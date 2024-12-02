@@ -4,10 +4,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedBy;
+
 import com.example.models.Genero;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,6 +20,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -38,6 +44,7 @@ public class Empleado implements Serializable{
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    //@Column(name="empleado_id")
     private int id;
 
     @NotNull(message="El nombre del empleado no puede ser nulo")
@@ -69,11 +76,15 @@ public class Empleado implements Serializable{
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Departamento departamento;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="empleado", cascade=CascadeType.PERSIST)
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    //@OnDelete(action=OnDeleteAction.CASCADE)
+    @JoinColumn(name="empleado_id", referencedColumnName="id")
     private List<Telefono> telefonos;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="empleado", cascade=CascadeType.PERSIST)
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    //@OnDelete(action=OnDeleteAction.CASCADE)
+    @JoinColumn(name="empleado_id", referencedColumnName="id")
     private List<Correo> correos;
 }
