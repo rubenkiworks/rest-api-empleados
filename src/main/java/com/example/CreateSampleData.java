@@ -16,13 +16,16 @@ import com.example.services.CorreoService;
 import com.example.services.DepartamentoService;
 import com.example.services.EmpleadoService;
 import com.example.services.TelefonoService;
+import com.example.springjwt.models.ERole;
+import com.example.springjwt.models.Role;
+import com.example.springjwt.repository.RoleRepository;
 
 @Configuration
 public class CreateSampleData {
 
     @Bean
     public CommandLineRunner samplesData(EmpleadoService empleadoService, DepartamentoService departamentoService,
-    TelefonoService telefonoService, CorreoService correoService){
+    TelefonoService telefonoService, CorreoService correoService, RoleRepository roleRepository){
         return args -> {
 
             departamentoService.save(Departamento.builder()
@@ -88,6 +91,11 @@ public class CreateSampleData {
             .direccion("jguerrero@fmdkf.com")
             .empleado(empleadoService.findById(2))
             .build());
+
+            // Agregamos los roles de USER y ADMIN
+            roleRepository.save(new Role(1, ERole.ROLE_ADMIN));
+
+            roleRepository.save(new Role(2, ERole.ROLE_USER));
         };
     }
 

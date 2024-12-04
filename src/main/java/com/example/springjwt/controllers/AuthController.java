@@ -85,6 +85,30 @@ public class AuthController {
                         .body(new MessageResponse("Error: Email is already in use!"));
         }
 
+        if (signUpRequest.getPassword().length() < 6)
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error: Password no puede tener menos de 6 caracteres!"));
+
+        if (signUpRequest.getPassword().length() > 40)
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error: Password no puede tener mas de 40 caracteres!"));
+        
+        if (signUpRequest.getEmail() == null)
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error: tiene que enviar un email!"));
+        
+        if (signUpRequest.getEmail().isBlank())
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error: El email no puede ser una cadena vacía!"));
+
+        if (signUpRequest.getUsername() == null)
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error: tiene que enviar un username!"));
+            
+        if (signUpRequest.getUsername().isBlank())
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error: El username no puede ser una cadena vacía!"));
+        
         // Create new user's account
         // User user = new User(signUpRequest.getUsername(),
         //      signUpRequest.getEmail(),

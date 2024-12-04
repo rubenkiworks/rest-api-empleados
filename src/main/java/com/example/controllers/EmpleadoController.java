@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +46,7 @@ public class EmpleadoController {
     private final FileUploadUtil fileUploadUtil;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<List<Empleado>> findAll(@RequestParam(name="page", required=false) Integer page,
     @RequestParam(name="size", required=false) Integer size){
 
@@ -67,6 +69,7 @@ public class EmpleadoController {
 
     @PostMapping(consumes="multipart/form-data")
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> saveEmpleado(@Valid  @RequestPart(name="empleado") Empleado empleado, 
      @RequestPart(name="file") MultipartFile file,
     BindingResult results) throws IOException{
@@ -144,6 +147,7 @@ public class EmpleadoController {
 
     @PutMapping("/{id}")
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> updateEmpleado(@Valid @RequestBody Empleado empleado, BindingResult results,
     @PathVariable Integer id){
 
@@ -189,6 +193,7 @@ public class EmpleadoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Map<String, Object>> findByIdEmpleado(@PathVariable Integer id){
         ResponseEntity<Map<String, Object>> responseEntity = null;
 
@@ -224,6 +229,7 @@ public class EmpleadoController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> deleteEmpleado(@PathVariable Integer id){
         ResponseEntity<Map<String, Object>> responseEntity = null;
 
